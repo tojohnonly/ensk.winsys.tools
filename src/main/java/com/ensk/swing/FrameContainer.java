@@ -15,8 +15,9 @@ import javax.swing.JPanel;
 public class FrameContainer {
 
     static Font buttonFont = new Font("Microsoft YaHei UI", Font.PLAIN, 15);
-    static Color panelBgColor = new Color(65, 63, 62);
-    static Color buttonBgColor = new Color(83, 81, 80);
+    static Color panelBgColor = new Color(41, 41, 41);
+    static Color buttonBgColor = new Color(70, 70, 70);
+    static Color buttonHoverColor = new Color(96, 96, 96);
     static final JFrame frame = new JFrame("Ensk's Tools");
     static JPanel modePanel = assembleModePanel();
 
@@ -69,12 +70,12 @@ public class FrameContainer {
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                clearIconCacheBtn.setBackground(new Color(98, 96, 95));
+                clearIconCacheBtn.setBackground(buttonHoverColor);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                clearIconCacheBtn.setBackground(new Color(83, 81, 80));
+                clearIconCacheBtn.setBackground(buttonBgColor);
             }
         });
 
@@ -100,12 +101,12 @@ public class FrameContainer {
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                removeOneDriveIconBtn.setBackground(new Color(98, 96, 95));
+                removeOneDriveIconBtn.setBackground(buttonHoverColor);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                removeOneDriveIconBtn.setBackground(new Color(83, 81, 80));
+                removeOneDriveIconBtn.setBackground(buttonBgColor);
             }
         });
 
@@ -120,17 +121,23 @@ public class FrameContainer {
         mixedModeBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
+                try {
+                    Thread.sleep(1000);
+                    mixedModeBtn.setText("Done!");
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
                 frame.validate();
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                mixedModeBtn.setBackground(new Color(98, 96, 95));
+                mixedModeBtn.setBackground(buttonHoverColor);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                mixedModeBtn.setBackground(new Color(83, 81, 80));
+                mixedModeBtn.setBackground(buttonBgColor);
             }
         });
 
