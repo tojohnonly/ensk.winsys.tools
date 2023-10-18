@@ -181,12 +181,21 @@ public class FrameContainer {
             Date date = new Date(lastModified);
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmmss");
             String modifiedDate = dateFormat.format(date);
-            File newFile = new File(file.getParent() + File.separator + modifiedDate + "."
-                    + file.getName().substring(file.getName().lastIndexOf(".") + 1).toLowerCase());
+            String parentPath = file.getParent();
+            String fileSuffix = null;
+            if (file.isDirectory()) {
+                fileSuffix = "." + file.getName();
+            } else {
+                if (file.getName().contains(".")) {
+                    fileSuffix = "." + file.getName().substring(file.getName().lastIndexOf(".") + 1).toLowerCase();
+                } else {
+                    fileSuffix = "";
+                }
+            }
+            File newFile = new File(parentPath + File.separator + modifiedDate + fileSuffix);
             // If the new file exists and is not the origin file, then add a sequence number after the new name
             if (newFile.exists() && !(newFile.getName().equals(file.getName()))) {
-                newFile = new File(file.getParent() + File.separator + modifiedDate + index + "."
-                        + file.getName().substring(file.getName().lastIndexOf(".") + 1).toLowerCase());
+                newFile = new File(parentPath + File.separator + modifiedDate + index + fileSuffix);
             }
             boolean success = file.renameTo(newFile);
             System.out.println("[" + success + "] " + file + " >>>>> " + newFile);
