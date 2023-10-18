@@ -7,10 +7,15 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class FrameContainer {
 
@@ -42,6 +47,7 @@ public class FrameContainer {
         panel.setLayout(null);
         panel.setBackground(panelBgColor);
 
+        /** Clear Icon Cache Button */
         final JRoundedButton clearIconCacheBtn = new JRoundedButton("Clear Icon Cache");
         clearIconCacheBtn.setBounds(50, 30, 345, 35);
         clearIconCacheBtn.setForeground(Color.WHITE);
@@ -79,6 +85,7 @@ public class FrameContainer {
             }
         });
 
+        /** Remove OneDrive Icon Button */
         final JRoundedButton removeOneDriveIconBtn = new JRoundedButton("Remove OneDrive Icon");
         removeOneDriveIconBtn.setBounds(50, 80, 345, 35);
         removeOneDriveIconBtn.setForeground(Color.WHITE);
@@ -110,41 +117,81 @@ public class FrameContainer {
             }
         });
 
-        final JRoundedButton mixedModeBtn = new JRoundedButton("Coming Soon...");
-        mixedModeBtn.setBounds(50, 130, 345, 35);
-        mixedModeBtn.setForeground(Color.WHITE);
-        mixedModeBtn.setFont(buttonFont);
-        mixedModeBtn.setBackground(buttonBgColor);
-        mixedModeBtn.setBorder(new RoundBorder());
-        mixedModeBtn.setBorderPainted(false);
-        mixedModeBtn.setFocusPainted(false);
-        mixedModeBtn.addMouseListener(new MouseAdapter() {
+        /** Rename Files Folder Text Field */
+        JTextField renameFilesFolderTextField = new JTextField();
+        renameFilesFolderTextField.setBounds(52, 130, 341, 35);
+        renameFilesFolderTextField.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 3));
+        renameFilesFolderTextField.setForeground(Color.WHITE);
+        renameFilesFolderTextField.setFont(buttonFont);
+        renameFilesFolderTextField.setBackground(buttonBgColor);
+
+        /** Rename Files Text Field */
+        final JRoundedButton renameFilesBtn = new JRoundedButton("Rename Files in Folder Above");
+        renameFilesBtn.setBounds(50, 175, 345, 35);
+        renameFilesBtn.setForeground(Color.WHITE);
+        renameFilesBtn.setFont(buttonFont);
+        renameFilesBtn.setBackground(buttonBgColor);
+        renameFilesBtn.setBorder(new RoundBorder());
+        renameFilesBtn.setBorderPainted(false);
+        renameFilesBtn.setFocusPainted(false);
+        renameFilesBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                try {
-                    Thread.sleep(1000);
-                    mixedModeBtn.setText("Done!");
-                } catch (InterruptedException ex) {
-                    throw new RuntimeException(ex);
+                String folderStr = renameFilesFolderTextField.getText().trim();
+                if (0 == folderStr.length()) {
+                    JOptionPane.showMessageDialog(frame, "Bad Folder Path !", "Warning", JOptionPane.WARNING_MESSAGE);
+                    renameFilesFolderTextField.grabFocus();
+                    return;
                 }
-                frame.validate();
+                File folder = new File(folderStr);
+                if (!folder.exists() || !folder.isDirectory()) {
+                    JOptionPane.showMessageDialog(frame, "Bad Folder Path !", "Warning", JOptionPane.WARNING_MESSAGE);
+                    renameFilesFolderTextField.grabFocus();
+                    return;
+                }
+                renameFolderFiles(folder);
+                renameFilesFolderTextField.setText("");
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                mixedModeBtn.setBackground(buttonHoverColor);
+                renameFilesBtn.setBackground(buttonHoverColor);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                mixedModeBtn.setBackground(buttonBgColor);
+                renameFilesBtn.setBackground(buttonBgColor);
             }
         });
 
         panel.add(clearIconCacheBtn);
         panel.add(removeOneDriveIconBtn);
-        panel.add(mixedModeBtn);
+        panel.add(renameFilesFolderTextField);
+        panel.add(renameFilesBtn);
+
         return panel;
+    }
+
+    private static void renameFolderFiles(File folder) {
+        File[] files = folder.listFiles();
+        int index = 0;
+        for (File file : files) {
+            index++;
+            long lastModified = file.lastModified();
+            Date date = new Date(lastModified);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmmss");
+            String modifiedDate = dateFormat.format(date);
+            File newFile = new File(file.getParent() + File.separator + modifiedDate + "."
+                    + file.getName().substring(file.getName().lastIndexOf(".") + 1).toLowerCase());
+            // If the new file exists and is not the origin file, then add a sequence number after the new name
+            if (newFile.exists() && !(newFile.getName().equals(file.getName()))) {
+                newFile = new File(file.getParent() + File.separator + modifiedDate + index + "."
+                        + file.getName().substring(file.getName().lastIndexOf(".") + 1).toLowerCase());
+            }
+            boolean success = file.renameTo(newFile);
+            System.out.println("[" + success + "] " + file + " >>>>> " + newFile);
+        }
+        JOptionPane.showMessageDialog(frame, "Success !", "INFO", JOptionPane.INFORMATION_MESSAGE);
     }
 
 }
