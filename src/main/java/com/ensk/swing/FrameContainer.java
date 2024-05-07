@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -17,6 +18,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.metadata.Directory;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.Tag;
 import com.sun.jna.platform.win32.Advapi32Util;
 import com.sun.jna.platform.win32.WinReg;
 
@@ -199,10 +204,7 @@ public class FrameContainer {
         int index = 0;
         for (File file : files) {
             index++;
-            long lastModified = file.lastModified();
-            Date date = new Date(lastModified);
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmmss");
-            String modifiedDate = dateFormat.format(date);
+            String modifiedDate = getFileDateName(file);
             String parentPath = file.getParent();
             String fileSuffix = null;
             if (file.isDirectory()) {
@@ -223,6 +225,38 @@ public class FrameContainer {
             System.out.println("[" + success + "] " + file + " >>>>> " + newFile);
         }
         JOptionPane.showMessageDialog(frame, "Success !", "INFO", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private static String getFileDateName(File file) {
+        Date date = new Date(file.lastModified());
+        try {
+            Metadata metadata = ImageMetadataReader.readMetadata(file);
+            labekOuter:
+            for (Directory directory : metadata.getDirectories()) {
+                for (Tag tag : directory.getTags()) {
+                    String directoryName = directory.getName();
+                    String tagName = tag.getTagName();
+                    // Image Info
+                    if (Objects.equals(directoryName, "Exif SubIFD") && Objects.equals(tagName, "Date/Time Original")) {
+                        // 2024:04:08 22:47:40
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+                        date = format.parse(tag.getDescription());
+                        break labekOuter;
+                    }
+                    // Video Info
+                    if (Objects.equals(directoryName, "QuickTime") && Objects.equals(tagName, "Creation Time")) {
+                        // Mon May 06 20:36:33 +08:00 2024
+                        SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss XXX yyyy");
+                        date = format.parse(tag.getDescription());
+                        break labekOuter;
+                    }
+                }
+            }
+        } catch (Exception ex) {
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmmss");
+        String modifiedDate = dateFormat.format(date);
+        return modifiedDate;
     }
 
 }
