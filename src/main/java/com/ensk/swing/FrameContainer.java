@@ -17,14 +17,36 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.sun.jna.platform.win32.Advapi32Util;
+import com.sun.jna.platform.win32.WinReg;
+
 public class FrameContainer {
 
+    static Color panelBgColor = getSystemColor();
     static Font buttonFont = new Font("Microsoft YaHei UI", Font.PLAIN, 15);
-    static Color panelBgColor = new Color(41, 41, 41);
-    static Color buttonBgColor = new Color(70, 70, 70);
+    static Color buttonBgColor = generateButtonBgColor(panelBgColor);
     static Color buttonHoverColor = new Color(96, 96, 96);
     static final JFrame frame = new JFrame("Ensk's Tools");
     static JPanel modePanel = assembleModePanel();
+
+    public static Color getSystemColor() {
+        //	long color = Advapi32Util.registryGetIntValue(WinReg.HKEY_CURRENT_USER, "SOFTWARE\\Microsoft\\Windows\\DWM", "AccentColor");
+        long color = Advapi32Util.registryGetIntValue(WinReg.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\History\\Colors", "ColorHistory0");
+        int a = (int) ((color >> 24) & 0xFF);
+        int b = (int) ((color >> 16) & 0xFF);
+        int g = (int) ((color >> 8) & 0xFF);
+        int r = (int) (color & 0xFF);
+        // System.out.println(String.format("rgba(%d, %d, %d, %.2f)", r, g, b, a / 255D));
+        // System.out.println(String.format("rgb(%d, %d, %d, 1.0)", r, g, b));
+        return new Color(r, g, b);
+    }
+
+    public static Color generateButtonBgColor(Color panelBgColor) {
+        int r = (panelBgColor.getRed() + 30) > 255 ? 255 : panelBgColor.getRed() + 20;
+        int g = (panelBgColor.getGreen() + 30) > 255 ? 255 : panelBgColor.getGreen() + 20;
+        int b = (panelBgColor.getBlue() + 30) > 255 ? 255 : panelBgColor.getBlue() + 20;
+        return new Color(r, g, b);
+    }
 
     public static JFrame assembleFrame() {
         frame.setSize(460, 310);
