@@ -1,15 +1,11 @@
-package com.ensk.swing;
+package com.ensk.swing.ui;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Objects;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -18,10 +14,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.drew.imaging.ImageMetadataReader;
-import com.drew.metadata.Directory;
-import com.drew.metadata.Metadata;
-import com.drew.metadata.Tag;
+import com.ensk.swing.service.ClearIconCacheService;
+import com.ensk.swing.service.RemoveOneDriveIconService;
+import com.ensk.swing.service.RenameFileService;
 import com.sun.jna.platform.win32.Advapi32Util;
 import com.sun.jna.platform.win32.WinReg;
 
@@ -33,25 +28,6 @@ public class FrameContainer {
     static Color buttonHoverColor = new Color(96, 96, 96);
     static final JFrame frame = new JFrame("Ensk's Tools");
     static JPanel modePanel = assembleModePanel();
-
-    public static Color getSystemColor() {
-        //	long color = Advapi32Util.registryGetIntValue(WinReg.HKEY_CURRENT_USER, "SOFTWARE\\Microsoft\\Windows\\DWM", "AccentColor");
-        long color = Advapi32Util.registryGetIntValue(WinReg.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\History\\Colors", "ColorHistory0");
-        int a = (int) ((color >> 24) & 0xFF);
-        int b = (int) ((color >> 16) & 0xFF);
-        int g = (int) ((color >> 8) & 0xFF);
-        int r = (int) (color & 0xFF);
-        // System.out.println(String.format("rgba(%d, %d, %d, %.2f)", r, g, b, a / 255D));
-        // System.out.println(String.format("rgb(%d, %d, %d, 1.0)", r, g, b));
-        return new Color(r, g, b);
-    }
-
-    public static Color generateButtonBgColor(Color panelBgColor) {
-        int r = (panelBgColor.getRed() + 30) > 255 ? 255 : panelBgColor.getRed() + 20;
-        int g = (panelBgColor.getGreen() + 30) > 255 ? 255 : panelBgColor.getGreen() + 20;
-        int b = (panelBgColor.getBlue() + 30) > 255 ? 255 : panelBgColor.getBlue() + 20;
-        return new Color(r, g, b);
-    }
 
     public static JFrame assembleFrame() {
         frame.setSize(460, 310);
@@ -66,6 +42,21 @@ public class FrameContainer {
 
         frame.add(modePanel);
         return frame;
+    }
+
+    public static Color getSystemColor() {
+        long color = Advapi32Util.registryGetIntValue(WinReg.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\History\\Colors", "ColorHistory0");
+        int b = (int) ((color >> 16) & 0xFF);
+        int g = (int) ((color >> 8) & 0xFF);
+        int r = (int) (color & 0xFF);
+        return new Color(r, g, b);
+    }
+
+    public static Color generateButtonBgColor(Color panelBgColor) {
+        int r = (panelBgColor.getRed() + 30) > 255 ? 255 : panelBgColor.getRed() + 25;
+        int g = (panelBgColor.getGreen() + 30) > 255 ? 255 : panelBgColor.getGreen() + 25;
+        int b = (panelBgColor.getBlue() + 30) > 255 ? 255 : panelBgColor.getBlue() + 25;
+        return new Color(r, g, b);
     }
 
     public static JPanel assembleModePanel() {
@@ -86,26 +77,12 @@ public class FrameContainer {
         clearIconCacheBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                File userHome = new File(System.getProperty("user.home"));
-                File iconCacheFile = new File(userHome, "AppData\\Local\\iconcache.db");
-                if (iconCacheFile.exists()) {
-                    iconCacheFile.delete();
-                }
-
-                try {
-                    Runtime.getRuntime().exec("cmd /c taskkill /f /im explorer.exe");
-                    Thread.sleep(2000);
-                    Runtime.getRuntime().exec("cmd /c start explorer.exe");
-                } catch (IOException | InterruptedException ex) {
-                    ex.printStackTrace();
-                }
+                ClearIconCacheService.clearIconCache();
             }
-
             @Override
             public void mouseEntered(MouseEvent e) {
                 clearIconCacheBtn.setBackground(buttonHoverColor);
             }
-
             @Override
             public void mouseExited(MouseEvent e) {
                 clearIconCacheBtn.setBackground(buttonBgColor);
@@ -124,20 +101,12 @@ public class FrameContainer {
         removeOneDriveIconBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                try {
-                    Runtime.getRuntime().exec("cmd /c reg add HKEY_CLASSES_ROOT\\CLSID\\{018D5C66-4533-4307-9B53-224DE2ED1FE6} " +
-                            "/v System.IsPinnedToNameSpaceTree /t REG_DWORD /d 0 /f");
-                    Thread.sleep(1000);
-                } catch (IOException | InterruptedException ex) {
-                    ex.printStackTrace();
-                }
+                RemoveOneDriveIconService.removeOneDriveIcon();
             }
-
             @Override
             public void mouseEntered(MouseEvent e) {
                 removeOneDriveIconBtn.setBackground(buttonHoverColor);
             }
-
             @Override
             public void mouseExited(MouseEvent e) {
                 removeOneDriveIconBtn.setBackground(buttonBgColor);
@@ -151,7 +120,6 @@ public class FrameContainer {
         renameFilesFolderTextField.setForeground(Color.WHITE);
         renameFilesFolderTextField.setFont(buttonFont);
         renameFilesFolderTextField.setBackground(buttonBgColor);
-
         /** Rename Files Text Field */
         final JRoundedButton renameFilesBtn = new JRoundedButton("Rename Files in Folder Above");
         renameFilesBtn.setBounds(50, 175, 345, 35);
@@ -176,87 +144,26 @@ public class FrameContainer {
                     renameFilesFolderTextField.grabFocus();
                     return;
                 }
-                renameFolderFiles(folder);
+                RenameFileService.renameFolderFiles(folder);
+                JOptionPane.showMessageDialog(frame, "Success !", "INFO", JOptionPane.INFORMATION_MESSAGE);
                 renameFilesFolderTextField.setText("");
             }
-
             @Override
             public void mouseEntered(MouseEvent e) {
                 renameFilesBtn.setBackground(buttonHoverColor);
             }
-
             @Override
             public void mouseExited(MouseEvent e) {
                 renameFilesBtn.setBackground(buttonBgColor);
             }
         });
 
+        /** Assemble Mode Panel */
         panel.add(clearIconCacheBtn);
         panel.add(removeOneDriveIconBtn);
         panel.add(renameFilesFolderTextField);
         panel.add(renameFilesBtn);
-
         return panel;
-    }
-
-    private static void renameFolderFiles(File folder) {
-        File[] files = folder.listFiles();
-        int index = 0;
-        for (File file : files) {
-            index++;
-            String modifiedDate = getFileDateName(file);
-            String parentPath = file.getParent();
-            String fileSuffix = null;
-            if (file.isDirectory()) {
-                fileSuffix = "." + file.getName();
-            } else {
-                if (file.getName().contains(".")) {
-                    fileSuffix = "." + file.getName().substring(file.getName().lastIndexOf(".") + 1).toLowerCase();
-                } else {
-                    fileSuffix = "";
-                }
-            }
-            File newFile = new File(parentPath + File.separator + modifiedDate + fileSuffix);
-            // If the new file exists and is not the origin file, then add a sequence number after the new name
-            if (newFile.exists() && !(newFile.getName().equals(file.getName()))) {
-                newFile = new File(parentPath + File.separator + modifiedDate + index + fileSuffix);
-            }
-            boolean success = file.renameTo(newFile);
-            System.out.println("[" + success + "] " + file + " >>>>> " + newFile);
-        }
-        JOptionPane.showMessageDialog(frame, "Success !", "INFO", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    private static String getFileDateName(File file) {
-        Date date = new Date(file.lastModified());
-        try {
-            Metadata metadata = ImageMetadataReader.readMetadata(file);
-            labekOuter:
-            for (Directory directory : metadata.getDirectories()) {
-                for (Tag tag : directory.getTags()) {
-                    String directoryName = directory.getName();
-                    String tagName = tag.getTagName();
-                    // Image Info
-                    if (Objects.equals(directoryName, "Exif SubIFD") && Objects.equals(tagName, "Date/Time Original")) {
-                        // 2024:04:08 22:47:40
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
-                        date = format.parse(tag.getDescription());
-                        break labekOuter;
-                    }
-                    // Video Info
-                    if (Objects.equals(directoryName, "QuickTime") && Objects.equals(tagName, "Creation Time")) {
-                        // Mon May 06 20:36:33 +08:00 2024
-                        SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss XXX yyyy");
-                        date = format.parse(tag.getDescription());
-                        break labekOuter;
-                    }
-                }
-            }
-        } catch (Exception ex) {
-        }
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmmss");
-        String modifiedDate = dateFormat.format(date);
-        return modifiedDate;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.ensk.swing;
+package com.ensk.swing.ui;
 
 import java.awt.Color;
 import java.awt.Component;

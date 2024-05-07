@@ -1,5 +1,7 @@
 package com.ensk.swing;
 
+import com.ensk.swing.ui.FrameContainer;
+
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
