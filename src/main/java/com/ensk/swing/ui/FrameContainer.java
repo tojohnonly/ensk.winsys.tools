@@ -1,7 +1,6 @@
 package com.ensk.swing.ui;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -14,18 +13,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.ensk.swing.config.WtsConfig;
 import com.ensk.swing.service.ClearIconCacheService;
 import com.ensk.swing.service.RemoveOneDriveIconService;
 import com.ensk.swing.service.RenameFileService;
-import com.sun.jna.platform.win32.Advapi32Util;
-import com.sun.jna.platform.win32.WinReg;
 
 public class FrameContainer {
 
-    static Color panelBgColor = getSystemColor();
-    static Font buttonFont = new Font("Microsoft YaHei UI", Font.PLAIN, 15);
-    static Color buttonBgColor = generateButtonBgColor(panelBgColor);
-    static Color buttonHoverColor = new Color(96, 96, 96);
     static final JFrame frame = new JFrame("Ensk's Tools");
     static JPanel modePanel = assembleModePanel();
 
@@ -34,43 +28,25 @@ public class FrameContainer {
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().setBackground(panelBgColor);
-
+        frame.getContentPane().setBackground(WtsConfig.bgColor);
         URL iconURL = FrameContainer.class.getResource("/appicon.png");
         ImageIcon icon = new ImageIcon(iconURL);
         frame.setIconImage(icon.getImage());
-
         frame.add(modePanel);
         return frame;
     }
 
-    public static Color getSystemColor() {
-        long color = Advapi32Util.registryGetIntValue(WinReg.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\History\\Colors", "ColorHistory0");
-        int b = (int) ((color >> 16) & 0xFF);
-        int g = (int) ((color >> 8) & 0xFF);
-        int r = (int) (color & 0xFF);
-        return new Color(r, g, b);
-    }
-
-    public static Color generateButtonBgColor(Color panelBgColor) {
-        int r = (panelBgColor.getRed() + 30) > 255 ? 255 : panelBgColor.getRed() + 25;
-        int g = (panelBgColor.getGreen() + 30) > 255 ? 255 : panelBgColor.getGreen() + 25;
-        int b = (panelBgColor.getBlue() + 30) > 255 ? 255 : panelBgColor.getBlue() + 25;
-        return new Color(r, g, b);
-    }
-
     public static JPanel assembleModePanel() {
-
         JPanel panel = new JPanel();
         panel.setLayout(null);
-        panel.setBackground(panelBgColor);
+        panel.setBackground(WtsConfig.bgColor);
 
         /** Clear Icon Cache Button */
         final JRoundedButton clearIconCacheBtn = new JRoundedButton("Clear Icon Cache");
         clearIconCacheBtn.setBounds(50, 30, 345, 35);
         clearIconCacheBtn.setForeground(Color.WHITE);
-        clearIconCacheBtn.setFont(buttonFont);
-        clearIconCacheBtn.setBackground(buttonBgColor);
+        clearIconCacheBtn.setFont(WtsConfig.buttonFont);
+        clearIconCacheBtn.setBackground(WtsConfig.buttonBgColor);
         clearIconCacheBtn.setBorder(new RoundBorder());
         clearIconCacheBtn.setBorderPainted(false);
         clearIconCacheBtn.setFocusPainted(false);
@@ -81,11 +57,11 @@ public class FrameContainer {
             }
             @Override
             public void mouseEntered(MouseEvent e) {
-                clearIconCacheBtn.setBackground(buttonHoverColor);
+                clearIconCacheBtn.setBackground(WtsConfig.buttonHoverColor);
             }
             @Override
             public void mouseExited(MouseEvent e) {
-                clearIconCacheBtn.setBackground(buttonBgColor);
+                clearIconCacheBtn.setBackground(WtsConfig.buttonBgColor);
             }
         });
 
@@ -93,8 +69,8 @@ public class FrameContainer {
         final JRoundedButton removeOneDriveIconBtn = new JRoundedButton("Remove OneDrive Icon");
         removeOneDriveIconBtn.setBounds(50, 80, 345, 35);
         removeOneDriveIconBtn.setForeground(Color.WHITE);
-        removeOneDriveIconBtn.setFont(buttonFont);
-        removeOneDriveIconBtn.setBackground(buttonBgColor);
+        removeOneDriveIconBtn.setFont(WtsConfig.buttonFont);
+        removeOneDriveIconBtn.setBackground(WtsConfig.buttonBgColor);
         removeOneDriveIconBtn.setBorder(new RoundBorder());
         removeOneDriveIconBtn.setBorderPainted(false);
         removeOneDriveIconBtn.setFocusPainted(false);
@@ -105,11 +81,11 @@ public class FrameContainer {
             }
             @Override
             public void mouseEntered(MouseEvent e) {
-                removeOneDriveIconBtn.setBackground(buttonHoverColor);
+                removeOneDriveIconBtn.setBackground(WtsConfig.buttonHoverColor);
             }
             @Override
             public void mouseExited(MouseEvent e) {
-                removeOneDriveIconBtn.setBackground(buttonBgColor);
+                removeOneDriveIconBtn.setBackground(WtsConfig.buttonBgColor);
             }
         });
 
@@ -118,14 +94,14 @@ public class FrameContainer {
         renameFilesFolderTextField.setBounds(52, 130, 341, 35);
         renameFilesFolderTextField.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 3));
         renameFilesFolderTextField.setForeground(Color.WHITE);
-        renameFilesFolderTextField.setFont(buttonFont);
-        renameFilesFolderTextField.setBackground(buttonBgColor);
+        renameFilesFolderTextField.setFont(WtsConfig.buttonFont);
+        renameFilesFolderTextField.setBackground(WtsConfig.buttonBgColor);
         /** Rename Files Text Field */
         final JRoundedButton renameFilesBtn = new JRoundedButton("Rename Files in Folder Above");
         renameFilesBtn.setBounds(50, 175, 345, 35);
         renameFilesBtn.setForeground(Color.WHITE);
-        renameFilesBtn.setFont(buttonFont);
-        renameFilesBtn.setBackground(buttonBgColor);
+        renameFilesBtn.setFont(WtsConfig.buttonFont);
+        renameFilesBtn.setBackground(WtsConfig.buttonBgColor);
         renameFilesBtn.setBorder(new RoundBorder());
         renameFilesBtn.setBorderPainted(false);
         renameFilesBtn.setFocusPainted(false);
@@ -150,11 +126,11 @@ public class FrameContainer {
             }
             @Override
             public void mouseEntered(MouseEvent e) {
-                renameFilesBtn.setBackground(buttonHoverColor);
+                renameFilesBtn.setBackground(WtsConfig.buttonHoverColor);
             }
             @Override
             public void mouseExited(MouseEvent e) {
-                renameFilesBtn.setBackground(buttonBgColor);
+                renameFilesBtn.setBackground(WtsConfig.buttonBgColor);
             }
         });
 
