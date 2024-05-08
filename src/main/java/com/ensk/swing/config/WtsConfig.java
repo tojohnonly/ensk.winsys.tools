@@ -43,9 +43,9 @@ public class WtsConfig {
     }
 
     private static Color getButtonHoverColor() {
-        Integer red = Integer.valueOf(properties.getProperty("button.bg.color.red"));
-        Integer green = Integer.valueOf(properties.getProperty("button.bg.color.green"));
-        Integer blue = Integer.valueOf(properties.getProperty("button.bg.color.blue"));
+        Integer red = Integer.valueOf(properties.getProperty("button.hover.color.red"));
+        Integer green = Integer.valueOf(properties.getProperty("button.hover.color.green"));
+        Integer blue = Integer.valueOf(properties.getProperty("button.hover.color.blue"));
         return new Color(red, green, blue);
     }
 

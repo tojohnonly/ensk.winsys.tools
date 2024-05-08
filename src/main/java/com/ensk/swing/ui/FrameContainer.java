@@ -6,12 +6,10 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.net.URL;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import com.ensk.swing.config.WtsConfig;
 import com.ensk.swing.service.ClearIconCacheService;
@@ -47,7 +45,6 @@ public class FrameContainer {
         clearIconCacheBtn.setForeground(Color.WHITE);
         clearIconCacheBtn.setFont(WtsConfig.buttonFont);
         clearIconCacheBtn.setBackground(WtsConfig.buttonBgColor);
-        clearIconCacheBtn.setBorder(new RoundBorder());
         clearIconCacheBtn.setBorderPainted(false);
         clearIconCacheBtn.setFocusPainted(false);
         clearIconCacheBtn.addMouseListener(new MouseAdapter() {
@@ -71,7 +68,6 @@ public class FrameContainer {
         removeOneDriveIconBtn.setForeground(Color.WHITE);
         removeOneDriveIconBtn.setFont(WtsConfig.buttonFont);
         removeOneDriveIconBtn.setBackground(WtsConfig.buttonBgColor);
-        removeOneDriveIconBtn.setBorder(new RoundBorder());
         removeOneDriveIconBtn.setBorderPainted(false);
         removeOneDriveIconBtn.setFocusPainted(false);
         removeOneDriveIconBtn.addMouseListener(new MouseAdapter() {
@@ -90,19 +86,18 @@ public class FrameContainer {
         });
 
         /** Rename Files Folder Text Field */
-        JTextField renameFilesFolderTextField = new JTextField();
+        JRoundedTextField renameFilesFolderTextField = new JRoundedTextField();
         renameFilesFolderTextField.setBounds(52, 130, 341, 35);
-        renameFilesFolderTextField.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 3));
         renameFilesFolderTextField.setForeground(Color.WHITE);
+        renameFilesFolderTextField.setCaretColor(Color.WHITE);
         renameFilesFolderTextField.setFont(WtsConfig.buttonFont);
-        renameFilesFolderTextField.setBackground(WtsConfig.buttonBgColor);
+        renameFilesFolderTextField.setBackground(WtsConfig.bgColor);
         /** Rename Files Text Field */
         final JRoundedButton renameFilesBtn = new JRoundedButton("Rename Files in Folder Above");
         renameFilesBtn.setBounds(50, 175, 345, 35);
         renameFilesBtn.setForeground(Color.WHITE);
         renameFilesBtn.setFont(WtsConfig.buttonFont);
         renameFilesBtn.setBackground(WtsConfig.buttonBgColor);
-        renameFilesBtn.setBorder(new RoundBorder());
         renameFilesBtn.setBorderPainted(false);
         renameFilesBtn.setFocusPainted(false);
         renameFilesBtn.addMouseListener(new MouseAdapter() {
