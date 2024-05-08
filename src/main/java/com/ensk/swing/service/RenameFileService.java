@@ -39,7 +39,6 @@ public class RenameFileService {
         }
     }
 
-
     private static String getFileDateName(File file) {
         Date date = new Date(file.lastModified());
         try {
@@ -66,6 +65,7 @@ public class RenameFileService {
                 }
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
         }
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmmss");
         String modifiedDate = dateFormat.format(date);
