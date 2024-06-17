@@ -40,32 +40,37 @@ public class RenameFileService {
     }
 
     private static String getFileDateName(File file) {
-        Date date = new Date(file.lastModified());
-        try {
-            Metadata metadata = ImageMetadataReader.readMetadata(file);
-            labekOuter:
-            for (Directory directory : metadata.getDirectories()) {
-                for (Tag tag : directory.getTags()) {
-                    String directoryName = directory.getName();
-                    String tagName = tag.getTagName();
-                    // Image Info
-                    if (Objects.equals(directoryName, "Exif SubIFD") && Objects.equals(tagName, "Date/Time Original")) {
-                        // 2024:04:08 22:47:40
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
-                        date = format.parse(tag.getDescription());
-                        break labekOuter;
-                    }
-                    // Video Info
-                    if (Objects.equals(directoryName, "QuickTime") && Objects.equals(tagName, "Creation Time")) {
-                        // Mon May 06 20:36:33 +08:00 2024
-                        SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss XXX yyyy");
-                        date = format.parse(tag.getDescription());
-                        break labekOuter;
+        Date date = null;
+        if (!file.isDirectory()) {
+            try {
+                Metadata metadata = ImageMetadataReader.readMetadata(file);
+                labekOuter:
+                for (Directory directory : metadata.getDirectories()) {
+                    for (Tag tag : directory.getTags()) {
+                        String directoryName = directory.getName();
+                        String tagName = tag.getTagName();
+                        // Image Info
+                        if (Objects.equals(directoryName, "Exif SubIFD") && Objects.equals(tagName, "Date/Time Original")) {
+                            // 2024:04:08 22:47:40
+                            SimpleDateFormat format = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+                            date = format.parse(tag.getDescription());
+                            break labekOuter;
+                        }
+                        // Video Info
+                        if (Objects.equals(directoryName, "QuickTime") && Objects.equals(tagName, "Creation Time")) {
+                            // Mon May 06 20:36:33 +08:00 2024
+                            SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss XXX yyyy");
+                            date = format.parse(tag.getDescription());
+                            break labekOuter;
+                        }
                     }
                 }
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        }
+        if (null == date || date.getTime() <= 0) {
+            date = new Date(file.lastModified());
         }
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmmss");
         String modifiedDate = dateFormat.format(date);
