@@ -22,7 +22,7 @@ public class FrameContainer {
     static JPanel modePanel = assembleModePanel();
 
     public static JFrame assembleFrame() {
-        frame.setSize(460, 310);
+        frame.setSize(460, 170);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -39,62 +39,16 @@ public class FrameContainer {
         panel.setLayout(null);
         panel.setBackground(WtsConfig.bgColor);
 
-        /** Clear Icon Cache Button */
-        final JRoundedButton clearIconCacheBtn = new JRoundedButton("Clear Icon Cache");
-        clearIconCacheBtn.setBounds(50, 30, 345, 35);
-        clearIconCacheBtn.setForeground(Color.WHITE);
-        clearIconCacheBtn.setFont(WtsConfig.buttonFont);
-        clearIconCacheBtn.setBackground(WtsConfig.buttonBgColor);
-        clearIconCacheBtn.setBorderPainted(false);
-        clearIconCacheBtn.setFocusPainted(false);
-        clearIconCacheBtn.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                ClearIconCacheService.clearIconCache();
-            }
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                clearIconCacheBtn.setBackground(WtsConfig.buttonHoverColor);
-            }
-            @Override
-            public void mouseExited(MouseEvent e) {
-                clearIconCacheBtn.setBackground(WtsConfig.buttonBgColor);
-            }
-        });
-
-        /** Remove OneDrive Icon Button */
-        final JRoundedButton removeOneDriveIconBtn = new JRoundedButton("Remove OneDrive Icon");
-        removeOneDriveIconBtn.setBounds(50, 80, 345, 35);
-        removeOneDriveIconBtn.setForeground(Color.WHITE);
-        removeOneDriveIconBtn.setFont(WtsConfig.buttonFont);
-        removeOneDriveIconBtn.setBackground(WtsConfig.buttonBgColor);
-        removeOneDriveIconBtn.setBorderPainted(false);
-        removeOneDriveIconBtn.setFocusPainted(false);
-        removeOneDriveIconBtn.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                RemoveOneDriveIconService.removeOneDriveIcon();
-            }
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                removeOneDriveIconBtn.setBackground(WtsConfig.buttonHoverColor);
-            }
-            @Override
-            public void mouseExited(MouseEvent e) {
-                removeOneDriveIconBtn.setBackground(WtsConfig.buttonBgColor);
-            }
-        });
-
         /** Rename Files Folder Text Field */
         JRoundedTextField renameFilesFolderTextField = new JRoundedTextField();
-        renameFilesFolderTextField.setBounds(52, 130, 341, 35);
+        renameFilesFolderTextField.setBounds(52, 20, 341, 35);
         renameFilesFolderTextField.setForeground(Color.WHITE);
         renameFilesFolderTextField.setCaretColor(Color.WHITE);
         renameFilesFolderTextField.setFont(WtsConfig.buttonFont);
         renameFilesFolderTextField.setBackground(WtsConfig.bgColor);
         /** Rename Files Text Field */
         final JRoundedButton renameFilesBtn = new JRoundedButton("Rename Files in Folder Above");
-        renameFilesBtn.setBounds(50, 175, 345, 35);
+        renameFilesBtn.setBounds(50, 70, 345, 35);
         renameFilesBtn.setForeground(Color.WHITE);
         renameFilesBtn.setFont(WtsConfig.buttonFont);
         renameFilesBtn.setBackground(WtsConfig.buttonBgColor);
@@ -130,8 +84,6 @@ public class FrameContainer {
         });
 
         /** Assemble Mode Panel */
-        panel.add(clearIconCacheBtn);
-        panel.add(removeOneDriveIconBtn);
         panel.add(renameFilesFolderTextField);
         panel.add(renameFilesBtn);
         return panel;
