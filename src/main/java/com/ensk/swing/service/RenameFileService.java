@@ -4,6 +4,8 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Directory;
@@ -18,6 +20,9 @@ public class RenameFileService {
         for (File file : files) {
             index++;
             String modifiedDate = getFileDateName(file);
+            if (null == modifiedDate) {
+                continue;
+            }
             String parentPath = file.getParent();
             String fileSuffix = null;
             if (file.isDirectory()) {
@@ -67,6 +72,14 @@ public class RenameFileService {
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
+            }
+        } else {
+            String regex = "^\\d{8}-\\d{6}\\..+$";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(file.getName());
+            if (matcher.matches()) {
+                System.out.println("Already Formated Folder Name");
+                return null;
             }
         }
         if (null == date || date.getTime() <= 0) {
