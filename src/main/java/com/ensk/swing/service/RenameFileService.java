@@ -90,4 +90,150 @@ public class RenameFileService {
         return modifiedDate;
     }
 
+
+    private static void rename(File file, String newFileName) {
+        File newFile = new File(file.getParent(), newFileName);
+        if (newFile.exists()) {
+            System.out.println("File Already Exists, Skip: " + newFileName);
+            return;
+        }
+        boolean success = file.renameTo(newFile);
+        if (success) {
+            System.out.println("Rename Success: " + file.getName() + " → " + newFileName);
+        } else {
+            System.out.println("Rename Failed: " + file.getName());
+        }
+    }
+
+    public static void replaceFileName(File folder, String aStr, String bStr) {
+        File[] files = folder.listFiles();
+        for (File file : files) {
+            String oldName = file.getName();
+            if (file.isFile()) {
+                int dotIndex = oldName.lastIndexOf('.');
+                if (dotIndex > 0) {
+                    String baseName = oldName.substring(0, dotIndex);
+                    String extension = oldName.substring(dotIndex);
+                    if (baseName.contains(aStr)) {
+                        String newBaseName = baseName.replace(aStr, bStr);
+                        rename(file, newBaseName + extension);
+                    }
+                } else {
+                    if (oldName.contains(aStr)) {
+                        String newName = oldName.replace(aStr, bStr);
+                        rename(file, newName);
+                    }
+                }
+            } else {
+                if (oldName.contains(aStr)) {
+                    String newName = oldName.replace(aStr, bStr);
+                    rename(file, newName);
+                }
+            }
+        }
+    }
+
+    public static void cutFrontFileName(File folder, Integer cutLength) {
+        File[] files = folder.listFiles();
+        for (File file : files) {
+            String name = file.getName();
+            if (file.isFile()) {
+                int dotIndex = name.lastIndexOf('.');
+                if (dotIndex <= 0) {
+                    if (name.length() <= cutLength) {
+                        System.out.println("Cut Front File Name Too Short, Skip: " + name);
+                        continue;
+                    }
+                    rename(file, name.substring(cutLength));
+                } else {
+                    String baseName = name.substring(0, dotIndex);
+                    String extension = name.substring(dotIndex);
+                    if (baseName.length() <= cutLength) {
+                        System.out.println("Cut Front File Name Too Short, Skip: " + name);
+                        continue;
+                    }
+                    rename(file, baseName.substring(cutLength) + extension);
+                }
+            } else {
+                if (name.length() <= cutLength) {
+                    System.out.println("Cut Front Folder Name Too Short, Skip:" + name);
+                    continue;
+                }
+                rename(file, name.substring(cutLength));
+            }
+        }
+    }
+
+    public static void cutTailFileName(File folder, Integer cutLength) {
+        File[] files = folder.listFiles();
+        for (File file : files) {
+            String name = file.getName();
+            if (file.isFile()) {
+                int dotIndex = name.lastIndexOf('.');
+                if (dotIndex <= 0) {
+                    if (name.length() <= cutLength) {
+                        System.out.println("Cut Tail File Name Too Short, Skip: " + name);
+                        continue;
+                    }
+                    rename(file, name.substring(0, name.length() - cutLength));
+                } else {
+                    String baseName = name.substring(0, dotIndex);
+                    String extension = name.substring(dotIndex);
+                    if (baseName.length() <= cutLength) {
+                        System.out.println("Cut Tail File Name Too Short, Skip: " + name);
+                        continue;
+                    }
+                    rename(file, baseName.substring(0, baseName.length() - cutLength) + extension);
+                }
+            } else {
+                if (name.length() <= cutLength) {
+                    System.out.println("Cut Tail Folder Name Too Short, Skip: " + name);
+                    continue;
+                }
+                rename(file, name.substring(0, name.length() - cutLength));
+            }
+        }
+    }
+
+    public static void addFrontFileName(File folder, String text) {
+        File[] files = folder.listFiles();
+        for (File file : files) {
+            String name = file.getName();
+            String newName;
+            if (file.isFile()) {
+                int dotIndex = name.lastIndexOf('.');
+                if (dotIndex > 0) {
+                    String baseName = name.substring(0, dotIndex);
+                    String extension = name.substring(dotIndex);
+                    newName = text + baseName + extension;
+                } else {
+                    newName = text + name;
+                }
+            } else {
+                newName = text + name;
+            }
+            rename(file, newName);
+        }
+    }
+
+    public static void addTailFileName(File folder, String text) {
+        File[] files = folder.listFiles();
+        for (File file : files) {
+            String name = file.getName();
+            String newName;
+            if (file.isFile()) {
+                int dotIndex = name.lastIndexOf('.');
+                if (dotIndex > 0) {
+                    String baseName = name.substring(0, dotIndex);
+                    String extension = name.substring(dotIndex);
+                    newName = baseName + text + extension;
+                } else {
+                    newName = name + text;
+                }
+            } else {
+                newName = name + text;
+            }
+            rename(file, newName);
+        }
+    }
 }
