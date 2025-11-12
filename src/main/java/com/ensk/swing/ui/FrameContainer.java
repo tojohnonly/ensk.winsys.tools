@@ -41,7 +41,7 @@ public class FrameContainer {
 
 
         /** Rename Files Folder Text Field */
-        JRoundedTextField renameFilesFolderTextField = new JRoundedTextField();
+        JRoundedTextField renameFilesFolderTextField = new JRoundedTextField("folder path");
         renameFilesFolderTextField.setBounds(52, 20, 341, 35);
         renameFilesFolderTextField.setForeground(Color.WHITE);
         renameFilesFolderTextField.setCaretColor(Color.WHITE);
@@ -86,31 +86,31 @@ public class FrameContainer {
 
 
         /** Prune File */
-        JRoundedTextField pruneFileNameTextField = new JRoundedTextField();
+        JRoundedTextField pruneFileNameTextField = new JRoundedTextField("folder path");
         pruneFileNameTextField.setBounds(52, 120, 341, 35);
         pruneFileNameTextField.setForeground(Color.WHITE);
         pruneFileNameTextField.setCaretColor(Color.WHITE);
         pruneFileNameTextField.setFont(WtsConfig.buttonFont);
         pruneFileNameTextField.setBackground(WtsConfig.bgColor);
-        JRoundedTextField pruneFileNameCutFrontTextField = new JRoundedTextField();
+        JRoundedTextField pruneFileNameCutFrontTextField = new JRoundedTextField("length");
         pruneFileNameCutFrontTextField.setBounds(52, 160, 81, 35);
         pruneFileNameCutFrontTextField.setForeground(Color.WHITE);
         pruneFileNameCutFrontTextField.setCaretColor(Color.WHITE);
         pruneFileNameCutFrontTextField.setFont(WtsConfig.buttonFont);
         pruneFileNameCutFrontTextField.setBackground(WtsConfig.bgColor);
-        JRoundedTextField pruneFileNameCutTailTextField = new JRoundedTextField();
+        JRoundedTextField pruneFileNameCutTailTextField = new JRoundedTextField("length");
         pruneFileNameCutTailTextField.setBounds(138, 160, 81, 35);
         pruneFileNameCutTailTextField.setForeground(Color.WHITE);
         pruneFileNameCutTailTextField.setCaretColor(Color.WHITE);
         pruneFileNameCutTailTextField.setFont(WtsConfig.buttonFont);
         pruneFileNameCutTailTextField.setBackground(WtsConfig.bgColor);
-        JRoundedTextField pruneFileNameAddFrontTextField = new JRoundedTextField();
+        JRoundedTextField pruneFileNameAddFrontTextField = new JRoundedTextField("prefix");
         pruneFileNameAddFrontTextField.setBounds(224, 160, 81, 35);
         pruneFileNameAddFrontTextField.setForeground(Color.WHITE);
         pruneFileNameAddFrontTextField.setCaretColor(Color.WHITE);
         pruneFileNameAddFrontTextField.setFont(WtsConfig.buttonFont);
         pruneFileNameAddFrontTextField.setBackground(WtsConfig.bgColor);
-        JRoundedTextField pruneFileNameAddTailTextField = new JRoundedTextField();
+        JRoundedTextField pruneFileNameAddTailTextField = new JRoundedTextField("suffix");
         pruneFileNameAddTailTextField.setBounds(310, 160, 82, 35);
         pruneFileNameAddTailTextField.setForeground(Color.WHITE);
         pruneFileNameAddTailTextField.setCaretColor(Color.WHITE);
@@ -299,19 +299,19 @@ public class FrameContainer {
 
 
         /** Replace File Name */
-        JRoundedTextField replaceFileNameTextField = new JRoundedTextField();
+        JRoundedTextField replaceFileNameTextField = new JRoundedTextField("folder path");
         replaceFileNameTextField.setBounds(52, 260, 341, 35);
         replaceFileNameTextField.setForeground(Color.WHITE);
         replaceFileNameTextField.setCaretColor(Color.WHITE);
         replaceFileNameTextField.setFont(WtsConfig.buttonFont);
         replaceFileNameTextField.setBackground(WtsConfig.bgColor);
-        JRoundedTextField replaceFileNameATextField = new JRoundedTextField();
+        JRoundedTextField replaceFileNameATextField = new JRoundedTextField("original ");
         replaceFileNameATextField.setBounds(52, 300, 165, 35);
         replaceFileNameATextField.setForeground(Color.WHITE);
         replaceFileNameATextField.setCaretColor(Color.WHITE);
         replaceFileNameATextField.setFont(WtsConfig.buttonFont);
         replaceFileNameATextField.setBackground(WtsConfig.bgColor);
-        JRoundedTextField replaceFileNameBTextField = new JRoundedTextField();
+        JRoundedTextField replaceFileNameBTextField = new JRoundedTextField("replacement");
         replaceFileNameBTextField.setBounds(222, 300, 171, 35);
         replaceFileNameBTextField.setForeground(Color.WHITE);
         replaceFileNameBTextField.setCaretColor(Color.WHITE);
@@ -377,7 +377,6 @@ public class FrameContainer {
         panel.add(cutTailBtn);
         panel.add(addFrontBtn);
         panel.add(addTailBtn);
-
 
         return panel;
     }
